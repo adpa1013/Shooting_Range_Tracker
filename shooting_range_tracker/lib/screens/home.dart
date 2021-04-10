@@ -11,6 +11,8 @@ import 'package:shooting_range_tracker/providers/img_provider.dart';
 class Home extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final images = useProvider(imagesProvider.state);
+    final imagesProv = useProvider(imagesProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -20,12 +22,25 @@ class Home extends HookWidget {
       ),
       body: Column(
         children: [
-          ElevatedButton(onPressed: () {}, child: Text("Gallery")),
-          // Image(
-          //   image: FileImage(
-          //     File(gallery.data.value.path),
-          //   ),
-          // )
+          ElevatedButton(
+              onPressed: () async {
+                await imagesProv.addImage(choice: 'gallery');
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              child: Text("Gallery")),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 3,
+              crossAxisSpacing: 4.0,
+              mainAxisSpacing: 8.0,
+              children: List<Widget>.generate(images.length, (index) {
+                return InkWell(
+                  onTap: () {},
+                  child: images[index],
+                );
+              }),
+            ),
+          )
         ],
       ),
     );
